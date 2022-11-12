@@ -19,11 +19,15 @@ obj_object.select_set(True)
 
 bpy.ops.object.origin_set(center = 'BOUNDS')
 
+obj_object.location.z = obj_object.dimensions.z / 2
+
 scene_fluid_modifier = obj_object.modifiers.new('scene modifier', 'FLUID')
 
 scene_fluid_modifier.fluid_type = 'EFFECTOR'
 
-bpy.ops.mesh.primitive_cube_add()
+scene_fluid_modifier.effector_settings.use_plane_init = True
+
+bpy.ops.mesh.primitive_cube_add(location = (0, 0, 1))
 
 domain = bpy.context.selected_objects[0]
 
@@ -35,7 +39,11 @@ domain_fluid_modifier.domain_settings.domain_type = mode
 
 domain_fluid_modifier.domain_settings.cache_type = 'ALL'
 
-bpy.ops.mesh.primitive_cube_add(location = (1, 0, 0), scale = (0.5, 1, 1))
+domain_fluid_modifier.domain_settings.cache_frame_end = 60
+
+domain_fluid_modifier.domain_settings.use_mesh = True
+
+bpy.ops.mesh.primitive_cube_add(location = (0.75, 0, 0.25), scale = (0.25, 1, 0.25))
 
 source = bpy.context.selected_objects[0]
 
