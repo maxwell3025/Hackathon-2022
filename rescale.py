@@ -1,9 +1,10 @@
 import bpy
 import math
 
-#'LIQUID' for flood, 'GAS' for fire
+#True for flood, False for fire
 
-mode = 'LIQUID'
+flood = False
+
 file = "C:\\Down\\neucon-scene1.obj"
 bpy.ops.import_scene.obj(filepath = file)
 obj_object = bpy.context.selected_objects[0]
@@ -35,7 +36,7 @@ domain_fluid_modifier = domain.modifiers.new('domain modifier', 'FLUID')
 
 domain_fluid_modifier.fluid_type = 'DOMAIN'
 
-domain_fluid_modifier.domain_settings.domain_type = mode
+domain_fluid_modifier.domain_settings.domain_type = 'LIQUID' if flood else 'GAS'
 
 domain_fluid_modifier.domain_settings.cache_type = 'ALL'
 
@@ -53,7 +54,7 @@ source_fluid_modifier.fluid_type = 'FLOW'
 
 source_fluid_modifier.flow_settings.flow_behavior = 'INFLOW'
 
-source_fluid_modifier.flow_settings.flow_type = 'LIQUID'
+source_fluid_modifier.flow_settings.flow_type = 'LIQUID' if flood else 'SMOKE'
 
 domain.select_set(True)
 
