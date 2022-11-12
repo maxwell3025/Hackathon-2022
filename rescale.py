@@ -54,3 +54,9 @@ source_fluid_modifier.fluid_type = 'FLOW'
 source_fluid_modifier.flow_settings.flow_behavior = 'INFLOW'
 
 source_fluid_modifier.flow_settings.flow_type = 'LIQUID'
+
+domain.select_set(True)
+
+bpy.context.view_layer.objects.active = domain
+
+bpy.ops.fluid.bake_all()
