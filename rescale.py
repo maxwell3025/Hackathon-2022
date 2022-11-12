@@ -3,7 +3,7 @@ import math
 
 #True for flood, False for fire
 
-flood = False
+flood = True
 
 file = "C:\\Down\\neucon-scene1.obj"
 bpy.ops.import_scene.obj(filepath = file)
@@ -28,7 +28,7 @@ scene_fluid_modifier.fluid_type = 'EFFECTOR'
 
 scene_fluid_modifier.effector_settings.use_plane_init = True
 
-bpy.ops.mesh.primitive_cube_add(location = (0, 0, 1))
+bpy.ops.mesh.primitive_cube_add(location = (0, 0, obj_object.dimensions.z), scale = (1, 1, obj_object.dimensions.z))
 
 domain = bpy.context.selected_objects[0]
 
@@ -40,11 +40,13 @@ domain_fluid_modifier.domain_settings.domain_type = 'LIQUID' if flood else 'GAS'
 
 domain_fluid_modifier.domain_settings.cache_type = 'ALL'
 
-domain_fluid_modifier.domain_settings.cache_frame_end = 60
+domain_fluid_modifier.domain_settings.resolution_max = 64
+
+domain_fluid_modifier.domain_settings.cache_frame_end = 120
 
 domain_fluid_modifier.domain_settings.use_mesh = True
 
-bpy.ops.mesh.primitive_cube_add(location = (0.75, 0, 0.25), scale = (0.25, 1, 0.25))
+bpy.ops.mesh.primitive_cube_add(location = (0.75, 0, obj_object.dimensions.z/4), scale = (0.25, 1, obj_object.dimensions.z/4))
 
 source = bpy.context.selected_objects[0]
 
