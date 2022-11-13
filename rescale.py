@@ -44,6 +44,10 @@ mesh = domain.data
 for f in mesh.polygons:
     f.use_smooth = True
     
+mesh = obj_object.data
+for f in mesh.polygons:
+    f.use_smooth = True
+    
 domain_fluid_modifier = domain.modifiers.new('domain modifier', 'FLUID')
 
 domain_fluid_modifier.fluid_type = 'DOMAIN'
