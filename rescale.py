@@ -40,6 +40,10 @@ bpy.ops.mesh.primitive_cube_add(location = (0, 0, obj_object.dimensions.z), scal
 
 domain = bpy.context.selected_objects[0]
 
+mesh = domain.data
+for f in mesh.polygons:
+    f.use_smooth = True
+    
 domain_fluid_modifier = domain.modifiers.new('domain modifier', 'FLUID')
 
 domain_fluid_modifier.fluid_type = 'DOMAIN'
