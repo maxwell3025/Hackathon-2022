@@ -4,8 +4,15 @@ import math
 #True for flood, False for fire
 
 flood = True
+        
+for obj in bpy.context.scene.objects:
+    obj.select_set(True)
+bpy.ops.object.delete()
+            
+bpy.data.scenes[0].frame_end = 10
 
 file = "C:\\Down\\neucon-scene1.obj"
+
 bpy.ops.import_scene.obj(filepath = file)
 obj_object = bpy.context.selected_objects[0]
 bpy.ops.transform.rotate(value = math.pi/2.0, orient_axis='X')
@@ -42,7 +49,7 @@ domain_fluid_modifier.domain_settings.cache_type = 'ALL'
 
 domain_fluid_modifier.domain_settings.resolution_max = 64
 
-domain_fluid_modifier.domain_settings.cache_frame_end = 120
+domain_fluid_modifier.domain_settings.cache_frame_end = 10
 
 domain_fluid_modifier.domain_settings.use_mesh = True
 
@@ -63,3 +70,11 @@ domain.select_set(True)
 bpy.context.view_layer.objects.active = domain
 
 bpy.ops.fluid.bake_all()
+
+bpy.ops.object.camera_add(location = (2, 2, 2), rotation = (math.atan(math.sqrt(2)), 0, math.pi * 3 /4))
+
+camera = bpy.context.selected_objects[0]
+
+bpy.ops.object.light_add(location = (0, 0, 2))
+
+source.hide_set(True)
