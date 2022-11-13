@@ -4,18 +4,19 @@ import math
 #True for flood, False for fire
 
 flood = True
-        
+anim_len = 60
+flood_height = 0.5
+flood_width = 0.25
+file = "C:\\Down\\S131Table.ply"
+
 for obj in bpy.context.scene.objects:
     obj.select_set(True)
 bpy.ops.object.delete()
             
-bpy.data.scenes[0].frame_end = 10
+bpy.data.scenes[0].frame_end = anim_len
 
-file = "C:\\Down\\neucon-scene1.obj"
-
-bpy.ops.import_scene.obj(filepath = file)
+bpy.ops.import_mesh.ply(filepath = file)
 obj_object = bpy.context.selected_objects[0]
-bpy.ops.transform.rotate(value = math.pi/2.0, orient_axis='X')
 scale = 2.0 / max(
 obj_object.dimensions.x,
 obj_object.dimensions.y,
@@ -49,11 +50,11 @@ domain_fluid_modifier.domain_settings.cache_type = 'ALL'
 
 domain_fluid_modifier.domain_settings.resolution_max = 64
 
-domain_fluid_modifier.domain_settings.cache_frame_end = 10
+domain_fluid_modifier.domain_settings.cache_frame_end = anim_len
 
 domain_fluid_modifier.domain_settings.use_mesh = True
 
-bpy.ops.mesh.primitive_cube_add(location = (0.75, 0, obj_object.dimensions.z/4), scale = (0.25, 1, obj_object.dimensions.z/4))
+bpy.ops.mesh.primitive_cube_add(location = (1 - flood_width * 0.5, 0, obj_object.dimensions.z * flood_height * 0.5), scale = (flood_width * 0.5, 1, obj_object.dimensions.z * flood_height * 0.5))
 
 source = bpy.context.selected_objects[0]
 
@@ -77,4 +78,28 @@ camera = bpy.context.selected_objects[0]
 
 bpy.ops.object.light_add(location = (0, 0, 2))
 
-source.hide_set(True)
+bpy.ops.object.select_all(action='DESELECT')
+
+source.select_set(True)
+
+bpy.ops.object.delete()
+
+bpy.context.scene.eevee.use_ssr = True
+
+bpy.context.scene.eevee.use_ssr_refraction = True
+
+water_material = bpy.data.materials.new(name = 'Water')
+
+water_material.use_nodes = True
+
+glass_bsdf = water_material.node_tree.nodes.new('ShaderNodeBsdfGlass')
+
+glass_bsdf.color = (0.5,0.5,0.5)
+
+output = water_material.node_tree.nodes['Material Output']
+
+water_material.node_tree.links.new(glass_bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+water_material.use_screen_refraction = True
+
+domain.data.materials.append(water_material)
